@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta name="viewport" content="width=device-width" />
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+</head>
+<body>
+
+<script type="text/javascript">
+
+/*В массиве, содержащем 3 или более чисел, определить подходит ли
+каждая группа из трех чисел условию a > b < c или a < b > c. Оформить
+решение в виде функции которая принимает исходный массив и
+возвращает массив с результатом проверки каждой группы, где 1
+удовлетворяет условию и 0 - нет.
+Например:
+Исходный массив:
+[1, 3, 5, 4, 5, 7]
+1, 3, 5 => 1 < 3 < 5 - нет
+3, 5, 4 => 3 < 5 > 4 - да
+5, 4, 5 => 5 > 4 < 5 - да
+4, 5, 7 => 4 < 5 < 7 - нет
+Результат:
+[0, 1, 1, 0]*/
+
+var arr = [1, 3, 5, 4, 5, 7];
+
+function firstTask( arr = [] ) {
+	var result = [];
+
+	for( i = 0; i < arr.length-2; i++ ) {
+		if ( arr[i] > arr[i+1] && arr[i+1] < arr[i+2] ) {
+			result.push(1);
+		}
+		else if ( arr[i] < arr[i+1] && arr[i+1] > arr[i+2] ) {
+			result.push(1);
+		}
+		else {
+			result.push(0);
+		}
+	}
+
+	return result;
+}
+
+var resultArr = firstTask( arr );
+console.log( resultArr );
+
+
+/*2. Дана матрица из целых чисел от 1 до 9, размером 3 * N, где N может
+быть больше либо равна 3. Необходимо определить содержит ли
+каждый участок матрицы 3 * 3 все числа от 1 до 9.
+Например:
+Входные данные:
+[
+	[ 1, 2, 3, 2, 7 ],
+	[ 4, 5, 6, 8, 1 ],
+	[ 7, 8, 9, 4, 5 ],
+];
+1 участок
+1 2 3
+4 5 6
+7 8 9
+содержит все цифры от 1 до 9
+2 участок
+2 3 2
+5 6 8
+8 9 4
+не содержит все цифры от 1 до 9
+3 участок
+3 2 7
+6 8 1
+9 4 5
+содержит все цифры от 1 до 9
+Результат [true, false, true]*/
+/*потому что нам нужно брать всегда по 3 элемента, а если брать с 7ки в первом подмассиве, то будет ошибка там нет 3х элементов*/
+
+var secondArr = [
+	[ 1, 2, 3, 2, 7 ],
+	[ 4, 5, 6, 8, 1 ],
+	[ 7, 8, 9, 4, 5 ],
+];	
+
+function secondTask( arr = [] ){
+	var finalRes = [];
+	var checkArr = [ 1, 2, 3, 4, 5, 6, 7, 8, 9];
+	for( i = 0; i < arr[0].length-2; i++ ) {
+		var res = [];
+		for( j = 0; j < 3; j++ ){
+			res.push( arr[j].slice( i, i + 3 ) );
+			
+		}
+		res = res.flat( 2 );
+		if ( checkArr.every( el=> res.includes( el ) ) ) {
+			finalRes.push( true );
+		}
+		else {
+			finalRes.push( false );
+		}
+	}
+	return finalRes;
+}
+
+var finalRes = secondTask( secondArr );
+console.log( finalRes );
+
+
+/*
+3. Есть набор строк (строка это массив из слов), условия
+форматирования каждой этой строки и лимит символов в строке.
+Необходимо подготовить текст к публикации, так чтобы он
+удовлетворял условиям форматирования и не превышал количество
+символов в строке. Текст должен быть заключен символ * со всех
+сторон.
+Например:
+Набор строк, представлен в виде массива, где его элемент это массив
+слов строки
+[
+	["Hello", "world"],
+	["Brad", "came", "to", "dinner", "with", "us"],
+	["He", "loves", "tacos"]
+];
+Условия форматирования, где LEFT указывает что текст нужно
+выровнять по левой стороне, а RIGHT по правой:
+["LEFT", "RIGHT", "LEFT"]
+Лимит символов в строке, целое положительное число: 16
+1я исходная строка удовлетворяет условию лимита строки "Hello
+world" (11 chars < 16). Учитывая правило форматирования для 1й
+строки LEFT, результат будет:
+*Hello world *
+2я исходная строка не влазит в лимит "Brad came to dinner with us" (27
+chars > 16), значит разбиваем на строки и применяем правило
+форматирования RIGHT для всех этих строк. Итого получаем строки
+● Brad came to*
+● dinner with us*
+3я строка получается
+*He loves tacos *
+Итого на выходе должен быть такой результат:
+[
+	"**",
+	"Hello world *",
+	" Brad came to*",
+	"* dinner with us*",
+	"He loves tacos *",
+	"*"
+]
+*/
+
+
+var thirdArr = [
+	[ "Hello", "world" ],
+	[ "Brad", "came", "to", "dinner", "with", "us" ],
+	[ "He", "loves", "tacos" ],
+	[ "Hello", "world", "He", "loves", "tacos", "Brad", "came", "to", "dinner", "with", "us" ]
+];
+
+var position = [ "LEFT", "RIGHT", "LEFT", "LEFT" ];
+var limit = 16;
+
+function thirdTask( position = [], arr = [], limit = 16 ) {
+	var result = [];
+	var pos = 0;
+	var temp = 0;
+	var trimmedString;
+	var text;
+
+	for ( i = 0; i < arr.length; i++ ) {
+		text = arr[i].join(" ");
+
+		if ( text.length <= limit) {
+			if ( "LEFT" == position[i] ) {
+				result.push( "*" + text + " *" );
+			}
+			else if ( "RIGHT" == position[i] ) {
+				result.push( "* " + text + "*" );
+			}
+		}
+		else {
+			text += " ";
+			pos = 0;
+			temp = 0;
+			while ( text.length > temp ) {
+				trimmedString = text.substr( pos, limit );
+				temp += trimmedString.length;
+	    		trimmedString = trimmedString.substr( 0, Math.min( trimmedString.length, trimmedString.lastIndexOf(" ") ) );
+	    		pos += trimmedString.length;
+	    		trimmedString = trimmedString.trim();
+	    		if ( "LEFT" == position[i] ) {
+					result.push( "*" + trimmedString + " *" );
+				}
+				else if ( "RIGHT" == position[i] ) {
+					result.push( "* " + trimmedString + "*" );
+				}
+			}
+			
+		}
+		
+	}
+
+	return result;
+}
+
+var thirdRes = thirdTask( position, thirdArr, limit );
+console.log( thirdRes );
+
+</script>
+
+
+
+</body>
+</html>
